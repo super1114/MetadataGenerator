@@ -8,22 +8,68 @@ const url1 = "https://ipfs.io/ipfs/QmPrVEgmqMZ4UCa4uJy4J8mvdWunhbURhL95eUNFN7fbb
 const url2 = "https://ipfs.io/ipfs/QmQKBrDjeKykfeRvEnGjtgsCufcxWudkmW9NCFcWaG7pNG"; // blue
 const url3 = "https://ipfs.io/ipfs/QmeKePruAF246dkfKV7QdtuPsDPyaZ6LzuX3e4hCWkKSpN"; // cyan
 
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+    }
+    return array;
+}
+function generateNumberArray(start, end) {
+const array = [];
+for (let i = start; i <end; i++) {
+    array.push(i);
+}
+return array;
+}
 
-for(var i=0; i< 3; i++) {
+const numberArray = generateNumberArray(0, 3000);
+  const shuffledArray = shuffleArray(numberArray);
+  console.log(shuffledArray[0]);
+for(var i=0; i< 3000; i++) {
+    let name;
+    let faction;
+    let ipfsurl;
+    let num;
+    if(i<996) {
+        num = i;
+        name = "Miner";
+        faction = "Miner";
+        ipfsurl = url;
+    } else if(i<996+997) {
+        num = i-996;
+        name = "Outlaw";
+        faction = "Outlaw";
+        ipfsurl = url2;
+    } else if(i<996+997+997) {
+        num = i-996-997;
+        name = "Governor";
+        faction = "Governor";
+        ipfsurl = url1;
+    } else {
+        num = i-996-997-997;
+        name = "Legendary";
+        ipfsurl = url3;
+        if(i<996+997+997+4) faction = "Miner";
+        else if(i<996+997+997+4+3) faction = "Outlaw";
+        else if(i<996+997+997+4+3+3) faction = "Governor";
+    }
     let data = {
-        name: `Legendary #${i+1+996+997+997+4+3}`,
+        name: `${name} #${num+1}`,
         symbol: "PL",
         description: "Where the Old Wild West meets the New. This is a world full of lawlessness, euphoria, and degeneracy... You should feel right at home.",
+        seller_fee_basis_points: 1000,
+        image: ipfsurl,
         attributes: [
             {
               "trait_type": "Faction",
-              "value": "Governor"
+              "value": faction
             }
         ],
         properties: {
             files: [
               {
-                uri: url3,
+                uri: ipfsurl,
                 type: "image/png"
               }
             ],
@@ -39,7 +85,7 @@ for(var i=0; i< 3; i++) {
 
     let jsonData = JSON.stringify(data, null, '\t');
     
-    fs.writeFile(`files/${i+996+997+997+4+3}.json`, jsonData, 'utf8', function(err) {
+    fs.writeFile(`files/${shuffledArray[i]}.json`, jsonData, 'utf8', function(err) {
         if (err) {
           console.log('An error occurred while writing the file!');
           return console.error(err);
@@ -48,5 +94,3 @@ for(var i=0; i< 3; i++) {
         console.log('JSON file has been generated successfully!');
     });
 }
-
-
